@@ -204,18 +204,6 @@
     }
   }
 
-  .museum-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    width: 100vw;
-    height: 100dvh;
-    min-height: 100vh;
-    pointer-events: none;
-    overflow: hidden;
-    background-color: var(--maroon-deep);
-  }
-
   /* sharp full-screen background image for login */
   .login-bg-img {
     position: fixed;
@@ -248,171 +236,6 @@
         rgba(70, 18, 28, 0.12) 0%,
         rgba(70, 18, 28, 0.22) 100%
       );
-  }
-
-  .museum-backdrop-image {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    transform: translate3d(-50%, -50%, 0) scale(1);
-    object-fit: cover;
-    object-position: center 40%;
-    filter: url(#museum-clarity) contrast(1.12) saturate(1.2) brightness(1.06);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    will-change: transform;
-  }
-
-  .museum-backdrop-overlay {
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(
-        ellipse 60% 50% at 50% 50%,
-        color-mix(in oklab, black 4%, transparent) 0%,
-        transparent 80%
-      ),
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, black 2%, transparent) 0%,
-        color-mix(in oklab, var(--maroon-deep) 6%, transparent) 100%
-      );
-  }
-
-  .login-card {
-    width: 100%;
-    max-width: 21.5rem;
-    position: relative;
-    border-radius: 1rem;
-    border: 1px solid color-mix(in oklab, var(--maroon-deep) 18%, transparent);
-    background: color-mix(in oklab, white 82%, transparent);
-    padding: 0.4rem;
-    box-shadow:
-      0 0 0 1px color-mix(in oklab, white 60%, transparent) inset,
-      0 4px 16px color-mix(in oklab, var(--maroon-deep) 14%, transparent),
-      0 20px 56px color-mix(in oklab, var(--maroon-deep) 22%, transparent);
-    backdrop-filter: blur(24px) saturate(1.1);
-    text-shadow: 0 1px 8px color-mix(in oklab, black 35%, transparent);
-    transition:
-      border-color 0.3s ease,
-      box-shadow 0.3s ease,
-      transform 0.3s ease;
-  }
-
-  .login-card::after {
-    content: "";
-    position: absolute;
-    inset: -1px;
-    z-index: -1;
-    border-radius: inherit;
-    background: linear-gradient(
-      135deg,
-      color-mix(in oklab, var(--gold) 45%, transparent) 0%,
-      color-mix(in oklab, var(--paper) 12%, transparent) 42%,
-      color-mix(in oklab, var(--maroon) 35%, transparent) 100%
-    );
-    opacity: 0.55;
-    filter: blur(0.5px);
-    animation: login-border-glow 8s ease-in-out infinite alternate;
-  }
-
-  @keyframes login-border-glow {
-    from {
-      opacity: 0.35;
-    }
-    to {
-      opacity: 0.72;
-    }
-  }
-
-  .login-card:focus-within {
-    border-color: color-mix(in oklab, var(--paper) 38%, transparent);
-    box-shadow:
-      0 0 0 1px color-mix(in oklab, var(--paper) 12%, transparent) inset,
-      0 0 0 4px color-mix(in oklab, var(--maroon) 18%, transparent),
-      0 28px 64px color-mix(in oklab, black 34%, transparent);
-    transform: translateY(-2px);
-  }
-
-  .login-form-inner {
-    border-radius: 0.8rem;
-    border: 1px solid color-mix(in oklab, var(--maroon-deep) 12%, transparent);
-    background:
-      radial-gradient(
-        ellipse 80% 40% at 50% 0%,
-        color-mix(in oklab, var(--gold-soft) 50%, transparent),
-        transparent 60%
-      ),
-      linear-gradient(
-        168deg,
-        color-mix(in oklab, white 88%, transparent) 0%,
-        color-mix(in oklab, white 72%, transparent) 100%
-      );
-    padding: 1.25rem 1.15rem 1.1rem;
-    backdrop-filter: blur(8px);
-  }
-
-  .login-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    border-radius: 9999px;
-    border: 1px solid color-mix(in oklab, var(--maroon) 25%, transparent);
-    background: color-mix(in oklab, var(--maroon-deep) 8%, transparent);
-    padding: 0.32rem 0.85rem;
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--maroon-deep);
-  }
-
-  .login-eyebrow::before {
-    content: "";
-    width: 0.4rem;
-    height: 0.4rem;
-    border-radius: 9999px;
-    background: var(--gold);
-    box-shadow: 0 0 10px color-mix(in oklab, var(--gold) 65%, transparent);
-  }
-
-  .login-title {
-    color: var(--maroon-deep);
-  }
-
-  .hero-title {
-    background: linear-gradient(
-      135deg,
-      var(--foreground) 0%,
-      color-mix(in oklab, var(--maroon) 68%, var(--foreground)) 52%,
-      color-mix(in oklab, var(--gold) 28%, var(--maroon)) 100%
-    );
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-  }
-
-  .login-alert-error {
-    border-radius: 0.75rem;
-    border: 1px solid color-mix(in oklab, #fca5a5 35%, transparent);
-    background: color-mix(in oklab, #7f1d1d 55%, transparent);
-    padding: 0.75rem 0.85rem;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: color-mix(in oklab, #fecaca 92%, white);
-  }
-
-  .login-alert-info {
-    border-radius: 0.75rem;
-    border: 1px solid color-mix(in oklab, var(--paper) 18%, transparent);
-    background: color-mix(in oklab, black 22%, transparent);
-    padding: 0.65rem 0.85rem;
-    font-size: 0.75rem;
-    color: color-mix(in oklab, var(--paper) 78%, transparent);
   }
 
   .form-select {
@@ -2227,8 +2050,7 @@
     .form-builder-shell,
     .form-builder-shell > *,
     .feedback-ticket-card,
-    .page-loader::before,
-    .login-card::after {
+    .page-loader::before {
       animation: none !important;
       transition: none !important;
     }
