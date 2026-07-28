@@ -85,7 +85,7 @@ function ClientDashboardPage() {
         <DashboardAlert tone="warning" title="Submit feedback">
           {needsFeedback} request{needsFeedback === 1 ? "" : "s"} need your feedback after service
           was marked complete.
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="mt-2 flex flex-wrap gap-2">
             {firstFeedbackTicket ? (
               <Link
                 to="/client/requests/$ticketId"
@@ -103,59 +103,50 @@ function ClientDashboardPage() {
       ) : canMarkComplete > 0 ? (
         <DashboardAlert tone="info" title="Mark service complete">
           {canMarkComplete} request{canMarkComplete === 1 ? "" : "s"} may be ready to mark complete.
-          <div className="mt-3">
+          <div className="mt-2">
             <ActionLink to={CLIENT_REQUESTS}>Open my requests</ActionLink>
           </div>
         </DashboardAlert>
       ) : rejected > 0 ? (
         <DashboardAlert tone="danger" title={`${rejected} request${rejected === 1 ? "" : "s"} rejected`}>
           Open the request to review remarks and submit again if needed.
-          <div className="mt-3">
+          <div className="mt-2">
             <ActionLink to={CLIENT_REQUESTS} variant="outline">
               My requests
             </ActionLink>
           </div>
         </DashboardAlert>
-      ) : items.length === 0 ? (
-        <DashboardAlert tone="info" title="No requests yet">
-          Submit your first technical assistance request using a published TA form.
-          <div className="mt-3">
-            <ActionLink to={CLIENT_SUBMIT}>Submit a request</ActionLink>
-          </div>
-        </DashboardAlert>
       ) : null}
 
-      {items.length > 0 ? (
-        <div className="dashboard-stats dashboard-stats-3">
-          <StatCard
-            label="Active requests"
-            value={active}
-            hint="In progress or pending"
-            to={CLIENT_REQUESTS}
-            icon={ListChecks}
-            accent="info"
-            loading={isLoading}
-          />
-          <StatCard
-            label="Pending approval"
-            value={pending}
-            hint="Waiting for admin"
-            to={CLIENT_REQUESTS}
-            icon={Clock3}
-            accent="warning"
-            loading={isLoading}
-          />
-          <StatCard
-            label="Completed"
-            value={completed}
-            hint="Closed requests"
-            to={CLIENT_REQUESTS}
-            icon={CheckCircle2}
-            accent="success"
-            loading={isLoading}
-          />
-        </div>
-      ) : null}
+      <div className="dashboard-stats dashboard-stats-3">
+        <StatCard
+          label="Active requests"
+          value={active}
+          hint="In progress or pending"
+          to={CLIENT_REQUESTS}
+          icon={ListChecks}
+          accent="info"
+          loading={isLoading}
+        />
+        <StatCard
+          label="Pending approval"
+          value={pending}
+          hint="Waiting for admin"
+          to={CLIENT_REQUESTS}
+          icon={Clock3}
+          accent="warning"
+          loading={isLoading}
+        />
+        <StatCard
+          label="Completed"
+          value={completed}
+          hint="Closed requests"
+          to={CLIENT_REQUESTS}
+          icon={CheckCircle2}
+          accent="success"
+          loading={isLoading}
+        />
+      </div>
 
       <DataPanel
         title="Recent requests"
@@ -171,8 +162,8 @@ function ClientDashboardPage() {
           <PanelLoading label="Loading your requests…" />
         ) : recent.length === 0 ? (
           <EmptyState
-            title="Nothing here yet"
-            description="Submitted requests will appear here with live status updates."
+            title="No requests available."
+            description="Submit your first technical assistance request to get started."
             action={
               <ActionLink to={CLIENT_SUBMIT}>
                 <span className="inline-flex items-center gap-2">

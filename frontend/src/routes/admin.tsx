@@ -75,6 +75,7 @@ function AdminLayout() {
       notificationsEmptyMessage="No pending client requests"
       navSections={[
         {
+          title: "MAIN",
           items: [
             { to: ADMIN_DASHBOARD, label: "Dashboard", icon: LayoutDashboard },
             { to: ADMIN_REPORTS, label: "Reports", icon: BarChart3 },
@@ -82,14 +83,14 @@ function AdminLayout() {
           ],
         },
         {
-          title: "Forms",
+          title: "FORMS",
           items: [
             { to: ADMIN_FORMS, label: "Form Builder", icon: FilePenLine },
             { to: ADMIN_MY_FORMS, label: "My Forms", icon: FileStack },
           ],
         },
         {
-          title: "Requests",
+          title: "REQUESTS",
           items: [
             {
               to: ADMIN_APPROVALS,
@@ -97,7 +98,7 @@ function AdminLayout() {
               icon: ClipboardCheck,
               badge: tickets?.pendingCount ?? notifications.length,
             },
-            { to: ADMIN_REQUESTS, label: "Request Mgmt", icon: Ticket },
+            { to: ADMIN_REQUESTS, label: "Request Management", icon: Ticket },
             { to: ADMIN_ASSIGNED, label: "My Assignments", icon: UserCheck },
           ],
         },

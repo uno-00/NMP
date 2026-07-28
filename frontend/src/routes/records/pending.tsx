@@ -47,6 +47,7 @@ function PendingFormsPage() {
         : "Could not load pending forms.";
 
   const items = data?.items ?? [];
+  const showTable = canQuery && !isLoading && !isError && items.length > 0;
 
   return (
     <div className="page-shell">
@@ -90,54 +91,61 @@ function PendingFormsPage() {
       </div>
 
       <DataPanel title={`${items.length} pending form${items.length === 1 ? "" : "s"}`}>
-        <div className="overflow-x-auto">
-          <table className="data-table w-full text-sm">
-            <thead className="text-left">
-              <tr>
-                <th className="px-4 py-3 sm:px-5">Form</th>
-                <th className="px-4 py-3 sm:px-5">Submitted by</th>
-                <th className="px-4 py-3 sm:px-5">Submitted</th>
-                <th className="px-4 py-3 sm:px-5">Ref</th>
-                <th className="px-4 py-3 sm:px-5">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {!canQuery || isLoading ? (
+        {!canQuery || isLoading ? (
+          <div className="overflow-x-auto">
+            <table className="data-table w-full text-sm">
+              <thead className="text-left">
+                <tr>
+                  <th className="px-6 py-3">Form</th>
+                  <th className="px-6 py-3">Submitted by</th>
+                  <th className="px-6 py-3">Submitted</th>
+                  <th className="px-6 py-3">Ref</th>
+                  <th className="px-6 py-3">Action</th>
+                </tr>
+              </thead>
+              <tbody>
                 <LoadingRows cols={5} />
-              ) : isError ? (
+              </tbody>
+            </table>
+          </div>
+        ) : isError ? (
+          <EmptyState
+            title="Unable to load forms."
+            description="Check your session and try again."
+          />
+        ) : !showTable ? (
+          <EmptyState
+            title="No pending forms."
+            description='Admin must click "Send to Records" in Form Builder for forms to appear here.'
+          />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="data-table w-full text-sm">
+              <thead className="text-left">
                 <tr>
-                  <td colSpan={5}>
-                    <EmptyState
-                      title="Unable to load forms"
-                      description="Check your session and try again."
-                    />
-                  </td>
+                  <th className="px-6 py-3">Form</th>
+                  <th className="px-6 py-3">Submitted by</th>
+                  <th className="px-6 py-3">Submitted</th>
+                  <th className="px-6 py-3">Ref</th>
+                  <th className="px-6 py-3">Action</th>
                 </tr>
-              ) : items.length === 0 ? (
-                <tr>
-                  <td colSpan={5}>
-                    <EmptyState
-                      title="No pending forms"
-                      description='Admin must click "Send to Records" in Form Builder for forms to appear here.'
-                    />
-                  </td>
-                </tr>
-              ) : (
-                items.map((row) => (
+              </thead>
+              <tbody>
+                {items.map((row) => (
                   <tr key={row._id} className="border-t border-border/70">
-                    <td className="px-4 py-3.5 sm:px-5 font-medium">{row.title}</td>
-                    <td className="px-4 py-3.5 sm:px-5">{row.createdBy?.name ?? "—"}</td>
-                    <td className="px-4 py-3.5 sm:px-5 text-muted-foreground">
+                    <td className="px-6 py-3 font-medium">{row.title}</td>
+                    <td className="px-6 py-3">{row.createdBy?.name ?? "—"}</td>
+                    <td className="px-6 py-3 text-muted-foreground">
                       {new Date(row.createdAt).toLocaleDateString(undefined, {
                         month: "short",
                         day: "numeric",
                         year: "numeric",
                       })}
                     </td>
-                    <td className="px-4 py-3.5 sm:px-5 font-mono text-xs text-muted-foreground">
+                    <td className="px-6 py-3 font-mono text-xs text-muted-foreground">
                       {row.refNumber}
                     </td>
-                    <td className="px-4 py-3.5 sm:px-5">
+                    <td className="px-6 py-3">
                       <div className="flex flex-wrap items-center gap-2">
                         <Button
                           size="sm"
@@ -159,11 +167,11 @@ function PendingFormsPage() {
                       </div>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </DataPanel>
 
       <FormPdfViewerDialog

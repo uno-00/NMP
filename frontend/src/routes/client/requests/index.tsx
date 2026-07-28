@@ -9,7 +9,7 @@ import {
   StatusBadge,
   WorkspacePageHeader,
 } from "@/components/layout/workspace-ui";
-import { CLIENT_DASHBOARD, CLIENT_SUBMIT } from "@/lib/navigation";
+import { CLIENT_SUBMIT } from "@/lib/navigation";
 import { ticketNeedsFeedback, ticketReadyToClose, ticketCanMarkComplete } from "@/lib/ticket-workflow";
 import { cn, formatAssignedPersonnel } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -35,57 +35,62 @@ function MyRequestsPage() {
       />
 
       <DataPanel title={`${items.length} request${items.length === 1 ? "" : "s"}`}>
-        <div className="overflow-x-auto">
-          <table className="data-table w-full text-sm">
-            <thead className="text-left">
-              <tr>
-                <th className="px-4 py-3 sm:px-5">Ticket</th>
-                <th className="px-4 py-3 sm:px-5">Form</th>
-                <th className="px-4 py-3 sm:px-5">Status</th>
-                <th className="px-4 py-3 sm:px-5">Assigned to</th>
-                <th className="px-4 py-3 sm:px-5">Submitted</th>
-                <th className="px-4 py-3 sm:px-5">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {isLoading ? (
-                <LoadingRows />
-              ) : items.length === 0 ? (
+        {isLoading ? (
+          <div className="overflow-x-auto">
+            <table className="data-table w-full text-sm">
+              <thead className="text-left">
                 <tr>
-                  <td colSpan={6}>
-                    <EmptyState
-                      title="No requests yet"
-                      description="Start by choosing a published form and submitting your technical assistance request."
-                      action={
-                        <div className="flex flex-wrap justify-center gap-2">
-                          <ActionLink to={CLIENT_SUBMIT}>Submit request</ActionLink>
-                          <ActionLink to={CLIENT_DASHBOARD} variant="outline">
-                            Back to dashboard
-                          </ActionLink>
-                        </div>
-                      }
-                    />
-                  </td>
+                  <th className="px-6 py-3">Ticket</th>
+                  <th className="px-6 py-3">Form</th>
+                  <th className="px-6 py-3">Status</th>
+                  <th className="px-6 py-3">Assigned to</th>
+                  <th className="px-6 py-3">Submitted</th>
+                  <th className="px-6 py-3">Action</th>
                 </tr>
-              ) : (
-                items.map((t) => (
+              </thead>
+              <tbody>
+                <LoadingRows />
+              </tbody>
+            </table>
+          </div>
+        ) : items.length === 0 ? (
+          <EmptyState
+            title="No requests available."
+            description="Create your first request to start tracking technical assistance."
+            action={<ActionLink to={CLIENT_SUBMIT}>Submit request</ActionLink>}
+          />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="data-table w-full text-sm">
+              <thead className="text-left">
+                <tr>
+                  <th className="px-6 py-3">Ticket</th>
+                  <th className="px-6 py-3">Form</th>
+                  <th className="px-6 py-3">Status</th>
+                  <th className="px-6 py-3">Assigned to</th>
+                  <th className="px-6 py-3">Submitted</th>
+                  <th className="px-6 py-3">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((t) => (
                   <tr key={t._id} className="border-t border-border/70">
-                    <td className="px-4 py-3.5 font-mono text-xs sm:px-5">{t.ticketNumber}</td>
-                    <td className="px-4 py-3.5 font-medium sm:px-5">{t.formTitle}</td>
-                    <td className="px-4 py-3.5 sm:px-5">
+                    <td className="px-6 py-3 font-mono text-xs">{t.ticketNumber}</td>
+                    <td className="px-6 py-3 font-medium">{t.formTitle}</td>
+                    <td className="px-6 py-3">
                       <StatusBadge status={t.status} />
                     </td>
-                    <td className="px-4 py-3.5 text-sm text-muted-foreground sm:px-5">
+                    <td className="px-6 py-3 text-sm text-muted-foreground">
                       {formatAssignedPersonnel(t.assignedTo)}
                     </td>
-                    <td className="px-4 py-3.5 text-muted-foreground sm:px-5">
+                    <td className="px-6 py-3 text-muted-foreground">
                       {new Date(t.createdAt).toLocaleDateString(undefined, {
                         month: "short",
                         day: "numeric",
                         year: "numeric",
                       })}
                     </td>
-                    <td className="px-4 py-3.5 sm:px-5">
+                    <td className="px-6 py-3">
                       {ticketCanMarkComplete(t) ? (
                         <Link
                           to="/client/requests/$ticketId"
@@ -124,11 +129,11 @@ function MyRequestsPage() {
                       )}
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </DataPanel>
     </div>
   );

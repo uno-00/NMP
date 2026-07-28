@@ -52,15 +52,21 @@ function ClientLayout() {
       notificationsEmptyMessage="No updates on your requests"
       navSections={[
         {
+          title: "MAIN",
           items: [
             { to: CLIENT_DASHBOARD, label: "Dashboard", icon: LayoutDashboard },
+            { to: CLIENT_MESSAGES, label: "Messages", icon: MessageCircle },
+          ],
+        },
+        {
+          title: "REQUESTS",
+          items: [
             {
               to: CLIENT_REQUESTS,
               label: "My Requests",
               icon: Inbox,
               badge: actionCount || undefined,
             },
-            { to: CLIENT_MESSAGES, label: "Messages", icon: MessageCircle },
             {
               to: CLIENT_FEEDBACK,
               label: "Service Feedback",

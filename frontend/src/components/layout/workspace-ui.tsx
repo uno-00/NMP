@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
-import { AlertCircle, AlertTriangle, ArrowLeft, ArrowUpRight, Inbox, Info, Loader2 } from "lucide-react";
-import type { ReactNode, SelectHTMLAttributes } from "react";
+import { AlertCircle, AlertTriangle, ArrowLeft, ArrowUpRight, Info, Loader2 } from "lucide-react";
+import type { CSSProperties, ReactNode, SelectHTMLAttributes } from "react";
+import museumHeroUrl from "@/assets/nmp-museum-hero.png";
 import { buttonVariants } from "@/components/ui/button";
 import { formatTicketStatus, statusToneClass, ticketStatusTone } from "@/lib/ticket-status";
 import type { FormStatus } from "@/lib/api/types";
@@ -37,20 +38,20 @@ export function WorkspacePageHeader({
   return (
     <div
       className={cn(
-        "flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between",
+        "flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between",
         bordered && "page-hero",
       )}
     >
       <div className="min-w-0">
-        <h1 className="text-balance text-2xl font-semibold tracking-tight sm:text-3xl hero-title">
+        <h1 className="text-balance text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
           {title}
         </h1>
         {description ? (
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-[0.95rem]">
+          <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             {description}
           </p>
         ) : null}
-        {meta ? <div className="mt-3">{meta}</div> : null}
+        {meta ? <div className="mt-2">{meta}</div> : null}
       </div>
       {actions ? (
         <div className="action-tray shrink-0">{actions}</div>
@@ -197,19 +198,27 @@ export function DashboardHero({
   actions?: ReactNode;
 }) {
   return (
-    <div className="dashboard-hero">
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+    <div
+      className="dashboard-hero"
+      style={
+        {
+          ["--dashboard-hero-image" as string]: `url(${museumHeroUrl})`,
+        } as CSSProperties
+      }
+    >
+      <div className="dashboard-hero-media" aria-hidden />
+      <div className="dashboard-hero-content flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="min-w-0">
           {eyebrow ? <span className="dashboard-eyebrow">{eyebrow}</span> : null}
-          <h1 className="mt-2 text-balance text-2xl font-semibold tracking-tight sm:text-[1.65rem] hero-title">
+          <h1 className="mt-1.5 text-balance text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
             {title}
           </h1>
           {description ? (
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-600">
               {description}
             </p>
           ) : null}
-          {meta ? <div className="mt-3">{meta}</div> : null}
+          {meta ? <div className="mt-2">{meta}</div> : null}
         </div>
         {actions ? (
           <div className="action-tray shrink-0">{actions}</div>
@@ -266,7 +275,7 @@ export function ListRow({
   action?: ReactNode;
 }) {
   return (
-    <div className="list-row group relative flex flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-5">
+    <div className="list-row group relative flex flex-wrap items-center justify-between gap-3 px-6 py-3">
       <div className="min-w-0 flex-1">
         <p className="font-medium text-foreground transition-colors group-hover:text-maroon">{title}</p>
         {subtitle ? (
@@ -320,17 +329,18 @@ export function StatCard({
           </span>
         ) : null}
       </div>
-      <p className="mt-3 text-3xl font-semibold tracking-tight tabular-nums transition-transform duration-300 group-hover:scale-[1.02]">
+      <p className="mt-3 text-2xl font-semibold tracking-tight tabular-nums">
         <span className="stat-card-value">{loading ? "…" : value}</span>
       </p>
       {hint ? (
-        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground transition-colors group-hover:text-muted-foreground/90">
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
           {hint}
         </p>
       ) : null}
       {to ? (
         <span className="stat-card-arrow" aria-hidden>
-          <ArrowUpRight className="h-4 w-4" />
+          <span className="stat-card-footer-label">View all</span>
+          <ArrowUpRight className="h-3.5 w-3.5" />
         </span>
       ) : null}
     </>
@@ -362,14 +372,14 @@ export function DataPanel({
 }) {
   return (
     <div className={cn("data-panel data-panel-interactive overflow-hidden", className)}>
-      <div className="data-panel-header flex items-start justify-between gap-3 border-b border-border/80 px-4 py-3.5 sm:px-5">
+      <div className="data-panel-header flex items-center justify-between gap-3 border-b border-border/80">
         <div className="min-w-0">
-          <h2 className="text-sm font-semibold text-foreground">{title}</h2>
+          <h2 className="text-sm font-semibold tracking-tight text-foreground">{title}</h2>
           {description ? (
             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{description}</p>
           ) : null}
         </div>
-        {action}
+        {action ? <div className="data-panel-action shrink-0">{action}</div> : null}
       </div>
       {children}
     </div>
@@ -402,15 +412,12 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="empty-state empty-state-interactive">
-      <div className="empty-state-icon">
-        <Inbox className="h-6 w-6" />
-      </div>
-      <p className="font-medium text-foreground">{title}</p>
+    <div className="empty-state">
+      <p className="text-sm font-medium text-foreground">{title}</p>
       {description ? (
-        <p className="mt-1 max-w-sm text-sm text-muted-foreground">{description}</p>
+        <p className="max-w-md text-sm leading-relaxed text-muted-foreground">{description}</p>
       ) : null}
-      {action ? <div className="mt-4">{action}</div> : null}
+      {action ? <div className="empty-state-action">{action}</div> : null}
     </div>
   );
 }
@@ -464,7 +471,7 @@ export function ActionLink({
       to={to}
       className={cn(
         buttonVariants({ variant: variant === "primary" ? "default" : "outline", size: "sm" }),
-        "action-link shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0",
+        "action-link shadow-sm transition-colors",
       )}
     >
       {children}
@@ -475,8 +482,8 @@ export function ActionLink({
 export function LoadingRows({ cols = 5 }: { cols?: number }) {
   return (
     <tr>
-      <td colSpan={cols} className="px-4 py-8 sm:px-5">
-        <div className="mx-auto max-w-md space-y-2">
+      <td colSpan={cols} className="px-6 py-6">
+        <div className="max-w-md space-y-2">
           <div className="skeleton-line w-full" />
           <div className="skeleton-line w-4/5 opacity-80" />
           <div className="skeleton-line w-3/5 opacity-60" />

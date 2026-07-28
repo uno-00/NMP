@@ -1,12 +1,12 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { ChevronDown, LogOut, Menu, X, type LucideIcon } from "lucide-react";
+import { ChevronDown, LogOut, Menu, Settings, X, type LucideIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { NmpLogo } from "@/components/layout/NmpLogo";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { NotificationBell } from "@/components/layout/NotificationBell";
 import { useAuth } from "@/lib/auth";
 import type { NotificationItem } from "@/lib/notifications";
-import { LOGIN } from "@/lib/navigation";
+import { LOGIN, settingsPathForSlot } from "@/lib/navigation";
 import { pathToSlot } from "@/lib/sessions";
 import { cn } from "@/lib/utils";
 
@@ -47,6 +47,19 @@ function itemIsActive(pathname: string, to: string) {
   return pathname === to || pathname.startsWith(`${to}/`);
 }
 
+function findActiveLabel(pathname: string, sections: NavSection[], fallback: string) {
+  let best: { label: string; len: number } | null = null;
+  for (const section of sections) {
+    for (const item of section.items) {
+      if (!itemIsActive(pathname, item.to)) continue;
+      if (!best || item.to.length > best.len) {
+        best = { label: item.label, len: item.to.length };
+      }
+    }
+  }
+  return best?.label ?? fallback;
+}
+
 export function DashboardShell({
   portalTitle,
   nav,
@@ -71,6 +84,11 @@ export function DashboardShell({
     () => navSections ?? (nav ? [{ items: nav }] : []),
     [nav, navSections],
   );
+
+  const pageTitle = useMemo(() => {
+    if (pathname.includes("/settings")) return "Settings";
+    return findActiveLabel(pathname, sections, portalTitle);
+  }, [pathname, sections, portalTitle]);
 
   useEffect(() => {
     setCollapsedSections((prev) => {
@@ -106,13 +124,13 @@ export function DashboardShell({
         key={item.to}
         to={item.to}
         className={cn(
-          "group flex items-center justify-between gap-2 rounded-xl px-2.5 py-2.5 text-sm font-medium transition-all",
+          "group flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm font-medium transition-colors",
           active
             ? "sidebar-nav-active"
             : "text-muted-foreground hover:bg-muted/70 hover:text-foreground",
         )}
       >
-        <span className="flex min-w-0 items-center gap-2.5">
+        <span className="flex min-w-0 items-center gap-2">
           {Icon ? (
             <span
               className={cn(
@@ -129,8 +147,8 @@ export function DashboardShell({
         {item.badge ? (
           <span
             className={cn(
-              "rounded-full px-1.5 py-0.5 text-[10px] font-bold",
-              active ? "bg-maroon/15 text-maroon" : "bg-destructive text-white",
+              "rounded-md px-1.5 py-0.5 text-[10px] font-bold tabular-nums",
+              active ? "bg-[#7a1f2b]/15 text-[#7a1f2b]" : "bg-[#7a1f2b] text-white",
             )}
           >
             {item.badge > 9 ? "9+" : item.badge}
@@ -144,16 +162,12 @@ export function DashboardShell({
     sections.map((section, index) => {
       const key = sectionKey(section, index);
       const open = isSectionOpen(key, section);
-      const hasTitledGroup = Boolean(section.title) && section.items.length > 0;
+      const title = section.title ?? (index === 0 ? "MAIN" : undefined);
+      const hasTitledGroup = Boolean(title) && section.items.length > 0;
 
       if (!hasTitledGroup) {
         return (
-          <div key={key} className="space-y-1">
-            {index === 0 && !section.title ? (
-              <p className="mb-2 px-2.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                Menu
-              </p>
-            ) : null}
+          <div key={key} className="space-y-0.5">
             {section.items.map(renderNavItem)}
           </div>
         );
@@ -167,7 +181,7 @@ export function DashboardShell({
             className="sidebar-nav-section-toggle"
             aria-expanded={open}
           >
-            <span>{section.title}</span>
+            <span>{title}</span>
             <ChevronDown
               className={cn("h-3.5 w-3.5 shrink-0 transition-transform duration-200", !open && "-rotate-90")}
               aria-hidden
@@ -202,8 +216,8 @@ export function DashboardShell({
   };
 
   const sidebar = (
-    <div className="flex h-full flex-col bg-card">
-      <div className="workspace-sidebar-brand">
+    <div className="flex h-full min-h-0 flex-col bg-card">
+      <div className="workspace-sidebar-brand shrink-0">
         <div className="workspace-sidebar-brand-inner">
           <div className="sidebar-brand-logo-ring">
             <NmpLogo
@@ -213,25 +227,56 @@ export function DashboardShell({
           </div>
           <div className="sidebar-brand-copy">
             <p className="sidebar-brand-eyebrow">National Museum of the Philippines</p>
-            <h2 className="sidebar-brand-title">{portalTitle}</h2>
+            <h2 className="sidebar-brand-title">TARF SYSTEM</h2>
           </div>
         </div>
-        <div className="sidebar-brand-divider" aria-hidden />
       </div>
 
-      <nav className="workspace-scroll flex-1 space-y-3 overflow-y-auto px-3 py-4">
+      <nav className="workspace-sidebar-nav workspace-scroll min-h-0 flex-1 space-y-3 overflow-y-auto overflow-x-hidden px-6 py-4">
         {renderNavSections()}
       </nav>
 
-      <div className="sidebar-footer hidden lg:block">
-        <p className="sidebar-footer-text">National Museum of the Philippines</p>
+      <div className="sidebar-bottom-actions shrink-0 border-t border-border/70 px-6 py-4">
+        <button
+          type="button"
+          className={cn(
+            "flex w-full items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium transition-colors",
+            pathname.includes("/settings")
+              ? "sidebar-nav-active"
+              : "text-muted-foreground hover:bg-muted/70 hover:text-foreground",
+          )}
+          onClick={() => {
+            const to = settingsPathForSlot(activeSlot);
+            void navigate({ to });
+          }}
+        >
+          <span
+            className={cn(
+              "sidebar-nav-icon",
+              pathname.includes("/settings") ? "sidebar-nav-icon-active" : "sidebar-nav-icon-idle",
+            )}
+          >
+            <Settings className="h-4 w-4" />
+          </span>
+          Settings
+        </button>
+        <button
+          type="button"
+          className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-rose-50 hover:text-rose-700"
+          onClick={signOut}
+        >
+          <span className="sidebar-nav-icon sidebar-nav-icon-idle">
+            <LogOut className="h-4 w-4" />
+          </span>
+          Logout
+        </button>
       </div>
     </div>
   );
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <aside className="workspace-sidebar hidden w-[17rem] shrink-0 lg:block">
+    <div className="workspace-app flex h-dvh overflow-hidden bg-[#f7f5f4]">
+      <aside className="workspace-sidebar hidden h-dvh w-64 shrink-0 lg:block">
         {sidebar}
       </aside>
 
@@ -257,8 +302,8 @@ export function DashboardShell({
         </div>
       ) : null}
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="workspace-header relative sticky top-0 z-40 flex items-center justify-between px-4 py-3 sm:px-6">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+        <header className="workspace-header z-40 flex shrink-0 items-center justify-between px-6 py-3">
           <div className="flex min-w-0 items-center gap-3">
             <button
               type="button"
@@ -268,12 +313,9 @@ export function DashboardShell({
             >
               <Menu className="h-5 w-5" />
             </button>
-            <div className="min-w-0">
-              <span className="block truncate text-sm font-semibold lg:hidden">{portalTitle}</span>
-              <span className="hidden text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground lg:block">
-                {portalTitle}
-              </span>
-            </div>
+            <h1 className="truncate text-base font-semibold tracking-tight text-slate-900">
+              {pageTitle}
+            </h1>
           </div>
 
           <div className="flex items-center gap-2">
@@ -287,24 +329,29 @@ export function DashboardShell({
               <button
                 type="button"
                 onClick={() => setProfileOpen((v) => !v)}
-                className="profile-trigger flex items-center gap-2 px-2.5 py-1.5 text-sm"
+                className="profile-trigger flex items-center gap-2 px-2 py-1.5 text-sm"
               >
-                <span className="profile-avatar flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold ring-2 ring-primary/15">
+                <span className="profile-avatar flex h-8 w-8 items-center justify-center rounded-full text-[11px] font-bold ring-2 ring-[#7a1f2b]/12">
                   {userInitials(user?.name, user?.email)}
                 </span>
-                <span className="max-w-[8rem] truncate">{user?.name}</span>
+                <span className="hidden max-w-36 truncate text-left sm:block">
+                  <span className="block truncate text-sm font-medium text-slate-900">
+                    {user?.name}
+                  </span>
+                  <span className="block truncate text-[11px] text-slate-500">{portalTitle}</span>
+                </span>
                 <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
               </button>
               {profileOpen ? (
-                <div className="absolute right-0 z-50 mt-2 w-52 overflow-hidden rounded-xl border border-border/80 bg-card/95 py-1 shadow-xl backdrop-blur-md">
-                  <div className="border-b border-border px-3 py-2.5">
+                <div className="absolute right-0 z-50 mt-2 w-52 overflow-hidden rounded-lg border border-border/80 bg-card py-1 shadow-lg">
+                  <div className="border-b border-border px-3 py-2">
                     <p className="truncate text-sm font-medium">{user?.name}</p>
                     <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
                   </div>
                   <button
                     type="button"
                     onClick={signOut}
-                    className="flex w-full items-center gap-2 px-3 py-2.5 text-sm hover:bg-muted"
+                    className="flex w-full items-center gap-2 px-3 py-2 text-sm hover:bg-muted"
                   >
                     <LogOut className="h-4 w-4" /> Sign out
                   </button>
@@ -314,7 +361,7 @@ export function DashboardShell({
           </div>
         </header>
 
-        <main className="workspace-main workspace-scroll flex-1 overflow-x-hidden px-4 py-6 sm:px-6 lg:px-8">
+        <main className="workspace-main workspace-scroll min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-6 py-6">
           <div className="mx-auto w-full max-w-6xl">
             <PageTransition>{children}</PageTransition>
           </div>

@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ClientRouteImport } from './routes/client'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RecordsSettingsRouteImport } from './routes/records/settings'
 import { Route as RecordsPublishedRouteImport } from './routes/records/published'
 import { Route as RecordsPendingRouteImport } from './routes/records/pending'
 import { Route as RecordsMessagesRouteImport } from './routes/records/messages'
@@ -22,11 +23,13 @@ import { Route as RecordsLoginRouteImport } from './routes/records/login'
 import { Route as RecordsDashboardRouteImport } from './routes/records/dashboard'
 import { Route as RecordsActivityRouteImport } from './routes/records/activity'
 import { Route as ClientSubmitRouteImport } from './routes/client/submit'
+import { Route as ClientSettingsRouteImport } from './routes/client/settings'
 import { Route as ClientMessagesRouteImport } from './routes/client/messages'
 import { Route as ClientLoginRouteImport } from './routes/client/login'
 import { Route as ClientFormsRouteImport } from './routes/client/forms'
 import { Route as ClientFeedbackRouteImport } from './routes/client/feedback'
 import { Route as ClientDashboardRouteImport } from './routes/client/dashboard'
+import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminReportsRouteImport } from './routes/admin/reports'
 import { Route as AdminMyFormsRouteImport } from './routes/admin/my-forms'
 import { Route as AdminMessagesRouteImport } from './routes/admin/messages'
@@ -71,6 +74,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RecordsSettingsRoute = RecordsSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => RecordsRoute,
+} as any)
 const RecordsPublishedRoute = RecordsPublishedRouteImport.update({
   id: '/published',
   path: '/published',
@@ -106,6 +114,11 @@ const ClientSubmitRoute = ClientSubmitRouteImport.update({
   path: '/submit',
   getParentRoute: () => ClientRoute,
 } as any)
+const ClientSettingsRoute = ClientSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ClientRoute,
+} as any)
 const ClientMessagesRoute = ClientMessagesRouteImport.update({
   id: '/messages',
   path: '/messages',
@@ -130,6 +143,11 @@ const ClientDashboardRoute = ClientDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => ClientRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminReportsRoute = AdminReportsRouteImport.update({
   id: '/reports',
@@ -211,11 +229,13 @@ export interface FileRoutesByFullPath {
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/my-forms': typeof AdminMyFormsRoute
   '/admin/reports': typeof AdminReportsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/client/dashboard': typeof ClientDashboardRoute
   '/client/feedback': typeof ClientFeedbackRoute
   '/client/forms': typeof ClientFormsRoute
   '/client/login': typeof ClientLoginRoute
   '/client/messages': typeof ClientMessagesRoute
+  '/client/settings': typeof ClientSettingsRoute
   '/client/submit': typeof ClientSubmitRoute
   '/records/activity': typeof RecordsActivityRoute
   '/records/dashboard': typeof RecordsDashboardRoute
@@ -223,6 +243,7 @@ export interface FileRoutesByFullPath {
   '/records/messages': typeof RecordsMessagesRoute
   '/records/pending': typeof RecordsPendingRoute
   '/records/published': typeof RecordsPublishedRoute
+  '/records/settings': typeof RecordsSettingsRoute
   '/admin/requests/$ticketId': typeof AdminRequestsTicketIdRoute
   '/client/requests/$ticketId': typeof ClientRequestsTicketIdRoute
   '/records/forms/$formId': typeof RecordsFormsFormIdRoute
@@ -244,11 +265,13 @@ export interface FileRoutesByTo {
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/my-forms': typeof AdminMyFormsRoute
   '/admin/reports': typeof AdminReportsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/client/dashboard': typeof ClientDashboardRoute
   '/client/feedback': typeof ClientFeedbackRoute
   '/client/forms': typeof ClientFormsRoute
   '/client/login': typeof ClientLoginRoute
   '/client/messages': typeof ClientMessagesRoute
+  '/client/settings': typeof ClientSettingsRoute
   '/client/submit': typeof ClientSubmitRoute
   '/records/activity': typeof RecordsActivityRoute
   '/records/dashboard': typeof RecordsDashboardRoute
@@ -256,6 +279,7 @@ export interface FileRoutesByTo {
   '/records/messages': typeof RecordsMessagesRoute
   '/records/pending': typeof RecordsPendingRoute
   '/records/published': typeof RecordsPublishedRoute
+  '/records/settings': typeof RecordsSettingsRoute
   '/admin/requests/$ticketId': typeof AdminRequestsTicketIdRoute
   '/client/requests/$ticketId': typeof ClientRequestsTicketIdRoute
   '/records/forms/$formId': typeof RecordsFormsFormIdRoute
@@ -278,11 +302,13 @@ export interface FileRoutesById {
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/my-forms': typeof AdminMyFormsRoute
   '/admin/reports': typeof AdminReportsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/client/dashboard': typeof ClientDashboardRoute
   '/client/feedback': typeof ClientFeedbackRoute
   '/client/forms': typeof ClientFormsRoute
   '/client/login': typeof ClientLoginRoute
   '/client/messages': typeof ClientMessagesRoute
+  '/client/settings': typeof ClientSettingsRoute
   '/client/submit': typeof ClientSubmitRoute
   '/records/activity': typeof RecordsActivityRoute
   '/records/dashboard': typeof RecordsDashboardRoute
@@ -290,6 +316,7 @@ export interface FileRoutesById {
   '/records/messages': typeof RecordsMessagesRoute
   '/records/pending': typeof RecordsPendingRoute
   '/records/published': typeof RecordsPublishedRoute
+  '/records/settings': typeof RecordsSettingsRoute
   '/admin/requests/$ticketId': typeof AdminRequestsTicketIdRoute
   '/client/requests/$ticketId': typeof ClientRequestsTicketIdRoute
   '/records/forms/$formId': typeof RecordsFormsFormIdRoute
@@ -313,11 +340,13 @@ export interface FileRouteTypes {
     | '/admin/messages'
     | '/admin/my-forms'
     | '/admin/reports'
+    | '/admin/settings'
     | '/client/dashboard'
     | '/client/feedback'
     | '/client/forms'
     | '/client/login'
     | '/client/messages'
+    | '/client/settings'
     | '/client/submit'
     | '/records/activity'
     | '/records/dashboard'
@@ -325,6 +354,7 @@ export interface FileRouteTypes {
     | '/records/messages'
     | '/records/pending'
     | '/records/published'
+    | '/records/settings'
     | '/admin/requests/$ticketId'
     | '/client/requests/$ticketId'
     | '/records/forms/$formId'
@@ -346,11 +376,13 @@ export interface FileRouteTypes {
     | '/admin/messages'
     | '/admin/my-forms'
     | '/admin/reports'
+    | '/admin/settings'
     | '/client/dashboard'
     | '/client/feedback'
     | '/client/forms'
     | '/client/login'
     | '/client/messages'
+    | '/client/settings'
     | '/client/submit'
     | '/records/activity'
     | '/records/dashboard'
@@ -358,6 +390,7 @@ export interface FileRouteTypes {
     | '/records/messages'
     | '/records/pending'
     | '/records/published'
+    | '/records/settings'
     | '/admin/requests/$ticketId'
     | '/client/requests/$ticketId'
     | '/records/forms/$formId'
@@ -379,11 +412,13 @@ export interface FileRouteTypes {
     | '/admin/messages'
     | '/admin/my-forms'
     | '/admin/reports'
+    | '/admin/settings'
     | '/client/dashboard'
     | '/client/feedback'
     | '/client/forms'
     | '/client/login'
     | '/client/messages'
+    | '/client/settings'
     | '/client/submit'
     | '/records/activity'
     | '/records/dashboard'
@@ -391,6 +426,7 @@ export interface FileRouteTypes {
     | '/records/messages'
     | '/records/pending'
     | '/records/published'
+    | '/records/settings'
     | '/admin/requests/$ticketId'
     | '/client/requests/$ticketId'
     | '/records/forms/$formId'
@@ -452,6 +488,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/records/settings': {
+      id: '/records/settings'
+      path: '/settings'
+      fullPath: '/records/settings'
+      preLoaderRoute: typeof RecordsSettingsRouteImport
+      parentRoute: typeof RecordsRoute
+    }
     '/records/published': {
       id: '/records/published'
       path: '/published'
@@ -501,6 +544,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientSubmitRouteImport
       parentRoute: typeof ClientRoute
     }
+    '/client/settings': {
+      id: '/client/settings'
+      path: '/settings'
+      fullPath: '/client/settings'
+      preLoaderRoute: typeof ClientSettingsRouteImport
+      parentRoute: typeof ClientRoute
+    }
     '/client/messages': {
       id: '/client/messages'
       path: '/messages'
@@ -535,6 +585,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/client/dashboard'
       preLoaderRoute: typeof ClientDashboardRouteImport
       parentRoute: typeof ClientRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/reports': {
       id: '/admin/reports'
@@ -638,6 +695,7 @@ interface AdminRouteChildren {
   AdminMessagesRoute: typeof AdminMessagesRoute
   AdminMyFormsRoute: typeof AdminMyFormsRoute
   AdminReportsRoute: typeof AdminReportsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
   AdminRequestsTicketIdRoute: typeof AdminRequestsTicketIdRoute
   AdminAssignedIndexRoute: typeof AdminAssignedIndexRoute
   AdminRequestsIndexRoute: typeof AdminRequestsIndexRoute
@@ -651,6 +709,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminMessagesRoute: AdminMessagesRoute,
   AdminMyFormsRoute: AdminMyFormsRoute,
   AdminReportsRoute: AdminReportsRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
   AdminRequestsTicketIdRoute: AdminRequestsTicketIdRoute,
   AdminAssignedIndexRoute: AdminAssignedIndexRoute,
   AdminRequestsIndexRoute: AdminRequestsIndexRoute,
@@ -664,6 +723,7 @@ interface ClientRouteChildren {
   ClientFormsRoute: typeof ClientFormsRoute
   ClientLoginRoute: typeof ClientLoginRoute
   ClientMessagesRoute: typeof ClientMessagesRoute
+  ClientSettingsRoute: typeof ClientSettingsRoute
   ClientSubmitRoute: typeof ClientSubmitRoute
   ClientRequestsTicketIdRoute: typeof ClientRequestsTicketIdRoute
   ClientRequestsIndexRoute: typeof ClientRequestsIndexRoute
@@ -675,6 +735,7 @@ const ClientRouteChildren: ClientRouteChildren = {
   ClientFormsRoute: ClientFormsRoute,
   ClientLoginRoute: ClientLoginRoute,
   ClientMessagesRoute: ClientMessagesRoute,
+  ClientSettingsRoute: ClientSettingsRoute,
   ClientSubmitRoute: ClientSubmitRoute,
   ClientRequestsTicketIdRoute: ClientRequestsTicketIdRoute,
   ClientRequestsIndexRoute: ClientRequestsIndexRoute,
@@ -690,6 +751,7 @@ interface RecordsRouteChildren {
   RecordsMessagesRoute: typeof RecordsMessagesRoute
   RecordsPendingRoute: typeof RecordsPendingRoute
   RecordsPublishedRoute: typeof RecordsPublishedRoute
+  RecordsSettingsRoute: typeof RecordsSettingsRoute
   RecordsFormsFormIdRoute: typeof RecordsFormsFormIdRoute
 }
 
@@ -700,6 +762,7 @@ const RecordsRouteChildren: RecordsRouteChildren = {
   RecordsMessagesRoute: RecordsMessagesRoute,
   RecordsPendingRoute: RecordsPendingRoute,
   RecordsPublishedRoute: RecordsPublishedRoute,
+  RecordsSettingsRoute: RecordsSettingsRoute,
   RecordsFormsFormIdRoute: RecordsFormsFormIdRoute,
 }
 

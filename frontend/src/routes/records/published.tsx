@@ -31,43 +31,53 @@ function PublishedFormsPage() {
       />
 
       <DataPanel title={`${items.length} published form${items.length === 1 ? "" : "s"}`}>
-        <div className="overflow-x-auto">
-          <table className="data-table w-full text-sm">
-            <thead className="text-left">
-              <tr>
-                <th className="px-4 py-3 sm:px-5">Form</th>
-                <th className="px-4 py-3 sm:px-5">Ref</th>
-                <th className="px-4 py-3 sm:px-5">Effectivity</th>
-                <th className="px-4 py-3 sm:px-5">Version</th>
-              </tr>
-            </thead>
-            <tbody>
-              {!canQuery || isLoading ? (
-                <LoadingRows cols={4} />
-              ) : items.length === 0 ? (
+        {!canQuery || isLoading ? (
+          <div className="overflow-x-auto">
+            <table className="data-table w-full text-sm">
+              <thead className="text-left">
                 <tr>
-                  <td colSpan={4}>
-                    <EmptyState
-                      title="No published forms"
-                      description="Approved forms from Pending Forms will appear here once published."
-                    />
-                  </td>
+                  <th className="px-6 py-3">Form</th>
+                  <th className="px-6 py-3">Ref</th>
+                  <th className="px-6 py-3">Effectivity</th>
+                  <th className="px-6 py-3">Version</th>
                 </tr>
-              ) : (
-                items.map((row) => (
+              </thead>
+              <tbody>
+                <LoadingRows cols={4} />
+              </tbody>
+            </table>
+          </div>
+        ) : items.length === 0 ? (
+          <EmptyState
+            title="No published forms."
+            description="Approved forms from Pending Forms will appear here once published."
+          />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="data-table w-full text-sm">
+              <thead className="text-left">
+                <tr>
+                  <th className="px-6 py-3">Form</th>
+                  <th className="px-6 py-3">Ref</th>
+                  <th className="px-6 py-3">Effectivity</th>
+                  <th className="px-6 py-3">Version</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((row) => (
                   <tr key={row._id} className="border-t border-border/70">
-                    <td className="px-4 py-3.5 sm:px-5 font-medium">{row.title}</td>
-                    <td className="px-4 py-3.5 sm:px-5 font-mono text-xs text-muted-foreground">
+                    <td className="px-6 py-3 font-medium">{row.title}</td>
+                    <td className="px-6 py-3 font-mono text-xs text-muted-foreground">
                       {row.refNumber}
                     </td>
-                    <td className="px-4 py-3.5 sm:px-5">{row.effectivity}</td>
-                    <td className="px-4 py-3.5 sm:px-5 text-muted-foreground">{row.version}</td>
+                    <td className="px-6 py-3">{row.effectivity}</td>
+                    <td className="px-6 py-3 text-muted-foreground">{row.version}</td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </DataPanel>
     </div>
   );

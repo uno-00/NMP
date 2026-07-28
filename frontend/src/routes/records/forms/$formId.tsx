@@ -81,7 +81,7 @@ function FormReviewPage() {
   }
 
   return (
-    <div className="page-shell space-y-6">
+    <div className="page-shell">
       <BackLink to={RECORDS_PENDING} label="Back to pending forms" />
 
       <WorkspacePageHeader

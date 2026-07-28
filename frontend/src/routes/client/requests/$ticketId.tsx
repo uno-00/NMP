@@ -114,12 +114,12 @@ function TicketTrackPage() {
         }
       />
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-6 lg:grid-cols-3">
         <TicketRequestDetails ticket={ticket} className="lg:col-span-2" showFeedback={false} />
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           <DataPanel title="Assigned personnel">
-            <div className="flex items-start gap-3 px-4 py-4 sm:px-5">
+            <div className="flex items-start gap-3 px-6 py-4">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <UserRound className="h-4 w-4" />
               </div>

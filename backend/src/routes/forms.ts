@@ -41,6 +41,16 @@ formsRouter.get("/published/:id/document.pdf", async (req, res, next) => {
   }
 });
 
+formsRouter.get("/mine/analytics", requireRoles("admin"), async (req, res, next) => {
+  try {
+    const { getMyFormsAnalytics } = await import("../services/myFormsAnalyticsService.js");
+    const analytics = await getMyFormsAnalytics(req.user!);
+    res.json(analytics);
+  } catch (e) {
+    next(e);
+  }
+});
+
 formsRouter.get("/mine", requireRoles("admin"), async (req, res, next) => {
   try {
     const items = await formService.listMyForms(req.user!);

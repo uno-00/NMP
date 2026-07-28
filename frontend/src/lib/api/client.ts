@@ -7,6 +7,7 @@ import type {
   FormReviewDecision,
   MentionRecord,
   MessageableUser,
+  MyFormsAnalytics,
   PokeRecord,
   TicketRecord,
   TicketStatus,
@@ -73,10 +74,23 @@ export const api = {
 
   me: (slot: PortalSlot) => apiFetch<{ user: ApiUser }>("/api/auth/me", undefined, slot),
 
+  updateProfile: (body: { name: string; division: string }) =>
+    apiFetch<{ user: ApiUser }>("/api/auth/profile", {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    }),
+
+  changePassword: (body: { currentPassword: string; newPassword: string }) =>
+    apiFetch<{ ok: boolean }>("/api/auth/change-password", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+
   // Forms (Admin)
   createForm: (body: object) =>
     apiFetch<{ form: FormRecord }>("/api/forms", { method: "POST", body: JSON.stringify(body) }),
   myForms: () => apiFetch<{ items: FormRecord[] }>("/api/forms/mine"),
+  myFormsAnalytics: () => apiFetch<MyFormsAnalytics>("/api/forms/mine/analytics"),
   submitFormForReview: (id: string) =>
     apiFetch<{ form: FormRecord }>(`/api/forms/${id}/submit-for-review`, { method: "POST" }),
   createAndSubmitForm: (body: object) =>

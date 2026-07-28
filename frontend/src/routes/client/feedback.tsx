@@ -6,13 +6,13 @@ import { toast } from "sonner";
 import { ClientFeedbackPanel } from "@/components/client/ClientFeedbackPanel";
 import {
   ActionLink,
-  DashboardHero,
   DataPanel,
   EmptyState,
   FlowNotice,
   ListRow,
   PageLoader,
   StatusBadge,
+  WorkspacePageHeader,
 } from "@/components/layout/workspace-ui";
 import { api } from "@/lib/api/client";
 import { isClientFeedbackConfigured } from "@/lib/feedback-config";
@@ -88,8 +88,7 @@ function ClientFeedbackPage() {
 
   return (
     <div className="page-shell">
-      <DashboardHero
-        eyebrow="Client"
+      <WorkspacePageHeader
         title="Service Feedback"
         description="After ICT completes your request, complete the official satisfaction survey, then confirm here."
         actions={<ActionLink to={CLIENT_REQUESTS} variant="outline">My requests</ActionLink>}
@@ -103,11 +102,11 @@ function ClientFeedbackPage() {
       ) : null}
 
       {awaitingFeedback.length > 0 ? (
-        <section className="space-y-4">
+        <section className="space-y-3">
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-sm font-semibold text-foreground">
               Awaiting feedback
-              <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-maroon/10 px-1.5 text-xs font-bold text-maroon">
+              <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-md bg-maroon/10 px-1.5 text-xs font-bold text-maroon">
                 {awaitingFeedback.length}
               </span>
             </h2>
@@ -118,7 +117,7 @@ function ClientFeedbackPage() {
               <PageLoader label="Loading requests…" />
             </div>
           ) : (
-            <div className="feedback-ticket-list grid gap-4">
+            <div className="feedback-ticket-list grid gap-3">
               {awaitingFeedback.map((t) => (
                 <FeedbackTicketCard key={t._id} ticketId={t._id} />
               ))}
@@ -131,7 +130,7 @@ function ClientFeedbackPage() {
             <PageLoader label="Loading requests…" />
           ) : (
             <EmptyState
-              title="No feedback pending"
+              title="No feedback pending."
               description="When you mark a service complete, the request will appear here for survey confirmation."
               action={<ActionLink to={CLIENT_REQUESTS}>View my requests</ActionLink>}
             />
@@ -144,7 +143,7 @@ function ClientFeedbackPage() {
           <FlowNotice tone="success" title="Feedback confirmed">
             Open each request below and click <strong>Close ticket</strong> when you are satisfied.
           </FlowNotice>
-          <ul className="mt-2 divide-y divide-border/80">
+          <ul className="divide-y divide-border/80">
             {readyToClose.map((t) => (
               <ListRow
                 key={t._id}

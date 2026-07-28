@@ -5,6 +5,7 @@ import { Eye, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   ActionPanel,
+  DataPanel,
   EmptyState,
   FlowNotice,
   FormSelect,
@@ -129,15 +130,24 @@ export function ClientSubmitForm({ initialFormId }: ClientSubmitFormProps) {
   const forms = formsData?.items ?? [];
   if (forms.length === 0) {
     return (
-      <EmptyState
-        title="No forms available yet"
-        description="Published TA forms will appear here when Records approves them. Please check back later or contact your administrator."
-      />
+      <>
+        <WorkspacePageHeader
+          title="Submit Request"
+          description={`Submitting as ${user?.name ?? user?.email ?? "your account"}.`}
+          bordered
+        />
+        <DataPanel title="Available forms">
+          <EmptyState
+            title="No forms available."
+            description="Published TA forms will appear here when Records approves them."
+          />
+        </DataPanel>
+      </>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <>
       <WorkspacePageHeader
         title="Submit Request"
         description={`Submitting as ${user?.name ?? user?.email ?? "your account"}. This request will appear in your list only.`}
@@ -232,6 +242,6 @@ export function ClientSubmitForm({ initialFormId }: ClientSubmitFormProps) {
           </>
         ) : null}
       </ActionPanel>
-    </div>
+    </>
   );
 }

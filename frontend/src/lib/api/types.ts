@@ -97,6 +97,48 @@ export type ActivityRecord = {
   createdAt: string;
 };
 
+export type NamedCount = {
+  name: string;
+  count: number;
+  percent: number;
+};
+
+export type MyFormsAnalytics = {
+  rangeLabel: string;
+  summary: {
+    totalRequests: number;
+    totalRequestsChangePct: number | null;
+    totalDivisions: number;
+    divisionsChangePct: number | null;
+    mostRequestedService: string;
+    mostRequestedCount: number;
+    mostRequestedPercent: number;
+    requestsThisMonth: number;
+    requestsThisMonthChangePct: number | null;
+  };
+  byDivision: NamedCount[];
+  byService: NamedCount[];
+  monthlyTrend: Array<{ month: string; monthKey: string; count: number }>;
+  insights: {
+    mostActiveDivision: string;
+    mostRequestedService: string;
+    fastestGrowing: string;
+    topSharePercent: number;
+    averagePerDay: number;
+  };
+  topDivisions: NamedCount[];
+  forms: Array<{
+    _id: string;
+    title: string;
+    refNumber: string;
+    status: string;
+    requestCount: number;
+    lastSubmissionAt: string | null;
+    updatedAt: string;
+    reviewRemarks?: string;
+  }>;
+};
+
 export type MessageableUser = {
   id: string;
   name: string;

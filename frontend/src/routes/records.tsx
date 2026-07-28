@@ -96,21 +96,22 @@ function RecordsLayout() {
       notificationsEmptyMessage="No forms waiting for review"
       navSections={[
         {
+          title: "MAIN",
           items: [{ to: RECORDS_DASHBOARD, label: "Dashboard", icon: LayoutDashboard }],
         },
         {
-          title: "Forms",
+          title: "FORMS",
           items: [
             { to: RECORDS_PENDING, label: "Pending Forms", icon: Clock, badge: pendingCount },
             { to: RECORDS_PUBLISHED, label: "Published Forms", icon: BookOpen },
           ],
         },
         {
-          title: "Requests",
+          title: "REQUESTS",
           items: [{ to: RECORDS_MESSAGES, label: "Messages", icon: MessageCircle }],
         },
         {
-          title: "System",
+          title: "SYSTEM",
           items: [{ to: RECORDS_ACTIVITY, label: "Activity Logs", icon: History }],
         },
       ]}

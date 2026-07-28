@@ -112,8 +112,8 @@ function RecordsDashboardPage() {
           <PanelLoading label="Loading forms…" />
         ) : pending.length === 0 ? (
           <EmptyState
-            title="All caught up"
-            description="No forms are waiting for review right now."
+            title="No pending forms."
+            description="Forms submitted by Admin for review will appear here."
           />
         ) : (
           <ul className="divide-y divide-border/80">
