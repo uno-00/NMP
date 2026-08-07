@@ -75,12 +75,9 @@ async function joinUserConversationRooms(
   socket: { join: (room: string) => void | Promise<void> },
   user: AuthUser,
 ) {
-  const or: Array<Record<string, unknown>> = [{ isGlobal: true }, { participantIds: user.id }];
-  if (user.role === "admin" || user.role === "record_management") {
-    or.push({ ticketId: { $exists: true, $ne: null } });
-  }
-
-  const conversations = await Conversation.find({ $or: or })
+  const conversations = await Conversation.find({
+    $or: [{ isGlobal: true }, { participantIds: user.id }],
+  })
     .select("_id isGlobal ticketId participantIds")
     .lean();
 
@@ -172,11 +169,6 @@ export async function refreshUserConversationRooms(userId: string) {
     role: user.role as AuthUser["role"],
     division: user.division,
   };
-
-  const or: Array<Record<string, unknown>> = [{ isGlobal: true }, { participantIds: userId }];
-  if (authUser.role === "admin" || authUser.role === "record_management") {
-    or.push({ ticketId: { $exists: true, $ne: null } });
-  }
 
   const sockets = await io.in(`user:${userId}`).fetchSockets();
   for (const socket of sockets) {

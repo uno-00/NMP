@@ -15,7 +15,7 @@ async function main() {
       console.error("");
       console.error(`Port ${config.port} is already in use.`);
       console.error("Another backend is probably already running — that is OK.");
-      console.error(`Use: http://localhost:${config.port}/api/health`);
+      console.error(`Use: http://on-prem.x-dcb.net:${config.port}/api/health`);
       console.error("Only run ONE backend terminal. Close this window or stop the other process.");
       console.error("");
       process.exit(1);
@@ -23,8 +23,8 @@ async function main() {
     throw err;
   });
 
-  server.listen(config.port, () => {
-    console.log(`API listening on http://localhost:${config.port}`);
+  server.listen(config.port, "0.0.0.0", () => {
+    console.log(`API listening on http://on-prem.x-dcb.net:${config.port}`);
   });
 }
 

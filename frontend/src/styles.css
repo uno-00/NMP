@@ -1416,9 +1416,9 @@
     background:
       linear-gradient(
         105deg,
-        color-mix(in oklab, var(--paper) 94%, white) 0%,
-        color-mix(in oklab, var(--paper) 78%, transparent) 48%,
-        color-mix(in oklab, var(--paper) 40%, transparent) 100%
+        color-mix(in oklab, var(--paper) 82%, white) 0%,
+        color-mix(in oklab, var(--paper) 48%, transparent) 42%,
+        color-mix(in oklab, var(--paper) 18%, transparent) 100%
       ),
       #f4ece8;
     padding: var(--space-3);
@@ -1432,8 +1432,8 @@
     background-image: var(--dashboard-hero-image);
     background-size: cover;
     background-position: center 40%;
-    opacity: 0.18;
-    filter: saturate(0.85) contrast(1.02);
+    opacity: 0.52;
+    filter: saturate(1.05) contrast(1.12) brightness(1.08);
   }
 
   .dashboard-hero-content {

@@ -54,6 +54,24 @@ function uniqueIds(ids: string[]) {
   return [...new Set(ids.filter(Boolean))];
 }
 
+async function getActiveRecordsUserIds(): Promise<string[]> {
+  const users = await User.find({ active: true, role: "record_management" })
+    .select("_id")
+    .lean();
+  return users.map((u) => u._id.toString());
+}
+
+async function buildTicketParticipantIds(ticket: {
+  creatorId: { toString(): string };
+  assignedTo: Array<{ toString(): string }>;
+}) {
+  return uniqueIds([
+    ticket.creatorId.toString(),
+    ...ticket.assignedTo.map((id) => id.toString()),
+    ...(await getActiveRecordsUserIds()),
+  ]);
+}
+
 export async function ensureTicketConversation(ticketId: string) {
   let conv = await Conversation.findOne({ ticketId });
   if (conv) return conv;
@@ -61,10 +79,7 @@ export async function ensureTicketConversation(ticketId: string) {
   const ticket = await Ticket.findById(ticketId).lean();
   if (!ticket) throw new AppError(404, "Ticket not found");
 
-  const participantIds = uniqueIds([
-    ticket.creatorId.toString(),
-    ...ticket.assignedTo.map((id) => id.toString()),
-  ]);
+  const participantIds = await buildTicketParticipantIds(ticket);
 
   conv = await Conversation.create({
     type: "ticket",
@@ -81,10 +96,7 @@ export async function syncTicketConversationParticipants(ticketId: string) {
   if (!ticket) return null;
 
   const conv = await ensureTicketConversation(ticketId);
-  const nextParticipants = uniqueIds([
-    ticket.creatorId.toString(),
-    ...ticket.assignedTo.map((id) => id.toString()),
-  ]);
+  const nextParticipants = await buildTicketParticipantIds(ticket);
 
   const previous = new Set(conv.participantIds.map((id) => id.toString()));
   const added = nextParticipants.filter((id) => !previous.has(id));
@@ -93,19 +105,24 @@ export async function syncTicketConversationParticipants(ticketId: string) {
   conv.title = ticket.ticketNumber;
   await conv.save();
 
-  for (const userId of [...added, ...nextParticipants]) {
+  const recordsIds = await getActiveRecordsUserIds();
+  for (const userId of uniqueIds([...added, ...nextParticipants, ...recordsIds])) {
     await refreshUserConversationRooms(userId);
   }
 
   if (added.length > 0) {
-    const addedUsers = await User.find({ _id: { $in: added }, role: "admin" })
-      .select("name")
-      .lean();
-    if (addedUsers.length > 0) {
-      await postTicketThreadSystemMessage(
-        conv._id.toString(),
-        `ICT personnel added to this request thread: ${addedUsers.map((u) => u.name).join(", ")}`,
-      );
+    const assignedIdSet = new Set(ticket.assignedTo.map((id) => id.toString()));
+    const addedAssigneeIds = added.filter((id) => assignedIdSet.has(id));
+    if (addedAssigneeIds.length > 0) {
+      const addedUsers = await User.find({ _id: { $in: addedAssigneeIds }, active: true })
+        .select("name")
+        .lean();
+      if (addedUsers.length > 0) {
+        await postTicketThreadSystemMessage(
+          conv._id.toString(),
+          `Assigned personnel added to this request thread: ${addedUsers.map((u) => u.name).join(", ")}`,
+        );
+      }
     }
   }
 
@@ -152,45 +169,23 @@ export async function getTicketThreadMentionableUserIds(ticketId: string): Promi
   const ticket = await Ticket.findById(ticketId).select("creatorId assignedTo").lean();
   if (!ticket) return [];
 
-  const ids = new Set<string>();
-  ids.add(ticket.creatorId.toString());
-  for (const assigneeId of ticket.assignedTo) {
-    ids.add(assigneeId.toString());
-  }
-
-  const staff = await User.find({
-    active: true,
-    role: { $in: ["admin", "record_management"] },
-  })
-    .select("_id")
-    .lean();
-
-  for (const member of staff) {
-    ids.add(member._id.toString());
-  }
-
-  return [...ids];
+  return buildTicketParticipantIds(ticket);
 }
 
 export async function canAccessTicketConversation(
   user: AuthUser,
   ticketId: string,
 ) {
-  if (user.role === "admin" || user.role === "record_management") return true;
-
   const ticket = await Ticket.findById(ticketId).select("creatorId assignedTo").lean();
   if (!ticket) return false;
 
-  if (user.role === "user") {
-    return ticket.creatorId.toString() === user.id;
+  if (user.role === "record_management") {
+    return true;
+  }
+
+  if (ticket.creatorId.toString() === user.id) {
+    return true;
   }
 
   return ticket.assignedTo.some((id) => id.toString() === user.id);
-}
-
-export function ticketConversationListFilter(user: AuthUser) {
-  if (user.role === "admin" || user.role === "record_management") {
-    return { ticketId: { $exists: true, $ne: null } };
-  }
-  return { ticketId: { $exists: true, $ne: null }, participantIds: new mongoose.Types.ObjectId(user.id) };
 }

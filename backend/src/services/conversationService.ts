@@ -14,7 +14,6 @@ import {
   canAccessTicketConversation,
   getTicketThreadMentionableUserIds,
   syncTicketConversationParticipants,
-  ticketConversationListFilter,
 } from "./ticketConversationService.js";
 
 const GLOBAL_TITLE = "NMP Team Chat";
@@ -159,7 +158,7 @@ export async function listConversations(user: AuthUser) {
       .select("_id")
       .lean();
     await Promise.all(myTickets.map((t) => syncTicketConversationParticipants(t._id.toString())));
-  } else if (user.role === "admin" || user.role === "record_management") {
+  } else if (user.role === "record_management") {
     const recentTickets = await Ticket.find({ status: { $nin: ["rejected"] } })
       .sort({ updatedAt: -1 })
       .limit(80)
@@ -170,8 +169,18 @@ export async function listConversations(user: AuthUser) {
     );
   }
 
+  const assignedTickets = await Ticket.find({
+    assignedTo: user.id,
+    status: { $nin: ["rejected"] },
+  })
+    .select("_id")
+    .lean();
+  await Promise.all(
+    assignedTickets.map((t) => syncTicketConversationParticipants(t._id.toString())),
+  );
+
   const conversations = await Conversation.find({
-    $or: [{ isGlobal: true }, { participantIds: user.id }, ticketConversationListFilter(user)],
+    $or: [{ isGlobal: true }, { participantIds: user.id }],
   })
     .sort({ isGlobal: -1, lastMessageAt: -1, updatedAt: -1 })
     .lean();
@@ -239,9 +248,9 @@ export async function listConversations(user: AuthUser) {
         type: "ticket" as const,
         title: ticket?.ticketNumber ?? conv.title,
         subtitle: ticket
-          ? `Client: ${ticket.creatorName} · ICT: ${assignees.length ? assignees.map((a) => a.name).join(", ") : "Awaiting assignment"}`
+          ? `Client: ${ticket.creatorName} · Assigned: ${assignees.length ? assignees.map((a) => a.name).join(", ") : "Awaiting assignment"}`
           : "Request thread",
-        threadParticipants: "Admin, Records, client & assigned ICT",
+        threadParticipants: "Records, client & assigned personnel",
         ticketStatus: ticket?.status ?? null,
         ticketTitle: ticket?.title ?? "",
       };
@@ -314,9 +323,9 @@ export async function getTicketConversation(user: AuthUser, ticketId: string) {
       type: "ticket" as const,
       title: ticket?.ticketNumber ?? conv.title,
       subtitle: ticket
-        ? `Client: ${ticket.creatorName} · ICT: ${assignees.length ? assignees.map((a) => a.name).join(", ") : "Awaiting assignment"}`
+        ? `Client: ${ticket.creatorName} · Assigned: ${assignees.length ? assignees.map((a) => a.name).join(", ") : "Awaiting assignment"}`
         : "Request thread",
-      threadParticipants: "Admin, Records, client & assigned ICT",
+      threadParticipants: "Records, client & assigned personnel",
       isGlobal: false,
       ticketId,
       ticketStatus: ticket?.status ?? null,

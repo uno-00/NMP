@@ -1,34 +1,18 @@
 {
-
   "name": "nmpticketing",
-
   "private": true,
-
   "scripts": {
-
-    "setup": "powershell -ExecutionPolicy Bypass -File ./scripts/setup.ps1",
-
-    "dev": "powershell -ExecutionPolicy Bypass -File ./scripts/start-dev.ps1",
-    "dev:web": "npm run dev --prefix frontend",
-
-    "start": "powershell -ExecutionPolicy Bypass -File ./scripts/start-dev.ps1",
-
-    "dev:api": "npm run dev --prefix backend",
-
-    "seed": "npm run seed --prefix backend",
-
-    "build": "npm run build --prefix backend && npm run build --prefix frontend",
-    "verify": "powershell -ExecutionPolicy Bypass -File ./scripts/verify-system.ps1",
-
-    "build:dev": "npm run build:dev --prefix frontend",
-
-    "preview": "npm run preview --prefix frontend",
-
-    "lint": "npm run lint --prefix frontend",
-
-    "format": "npm run format --prefix frontend"
-
+    "setup": "bash ./scripts/setup.sh",
+    "dev": "bash ./scripts/start-dev.sh",
+    "dev:web": "bun run --cwd frontend dev",
+    "start": "bash ./scripts/start-dev.sh",
+    "dev:api": "bun run --cwd backend dev",
+    "seed": "bun run --cwd backend seed",
+    "build": "bun run --cwd backend build && bun run --cwd frontend build",
+    "verify": "bash ./scripts/verify-system.sh",
+    "build:dev": "bun run --cwd frontend build:dev",
+    "preview": "bun run --cwd frontend preview",
+    "lint": "bun run --cwd frontend lint",
+    "format": "bun run --cwd frontend format"
   }
-
 }
-

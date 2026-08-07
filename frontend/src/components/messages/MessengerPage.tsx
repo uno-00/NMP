@@ -437,7 +437,7 @@ export function MessengerPage({ slot, initialTicketId, initialConversationId }: 
                     selected.isGlobal
                       ? "Message the NMP team…"
                       : selected.type === "ticket"
-                      ? "Message about this request… @ admin, records, client, or ICT"
+                      ? "Message about this request… @ records, client, or assigned personnel"
                         : `Message ${selected.title}…`
                   }
                 />

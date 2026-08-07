@@ -4,12 +4,12 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
-    "build:dev": "vite build --mode development",
-    "preview": "vite preview",
-    "lint": "eslint .",
-    "format": "prettier --write ."
+    "dev": "node-real ./node_modules/vite/bin/vite.js",
+    "build": "node-real ./node_modules/vite/bin/vite.js build",
+    "build:dev": "node-real ./node_modules/vite/bin/vite.js build --mode development",
+    "preview": "node-real ./node_modules/vite/bin/vite.js preview",
+    "lint": "bunx eslint .",
+    "format": "bunx prettier --write ."
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",

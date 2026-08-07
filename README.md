@@ -6,9 +6,9 @@ Three-portal system for the National Museum of the Philippines technical assista
 
 | Portal | URL | Role | Purpose |
 |--------|-----|------|---------|
-| **Admin** | http://localhost:8080/admin | admin | Build and publish request forms |
-| **Client** | http://localhost:8080/client | user | Submit requests with uploaded documents |
-| **Records** | http://localhost:8080/records | record_management | Review submissions, set recommendation |
+| **Admin** | http://on-prem.x-dcb.net:5173/admin | admin | Build and publish request forms |
+| **Client** | http://on-prem.x-dcb.net:5173/client | user | Submit requests with uploaded documents |
+| **Records** | http://on-prem.x-dcb.net:5173/records | record_management | Review submissions, set recommendation |
 
 ## Flow
 
@@ -18,12 +18,12 @@ Three-portal system for the National Museum of the Philippines technical assista
 
 ## Quick start
 
-```powershell
-npm run setup
-npm run start
+```bash
+bun run setup
+bun run start
 ```
 
-Requires MongoDB running locally.
+Requires MongoDB running locally and [Bun](https://bun.sh).
 
 ## Seed accounts
 
@@ -35,7 +35,7 @@ Requires MongoDB running locally.
 
 ## Build
 
-```powershell
-cd backend && npm run build
-cd frontend && npm run build
+```bash
+cd backend && bun run build
+cd frontend && bun run build
 ```

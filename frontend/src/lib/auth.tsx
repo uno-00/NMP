@@ -157,7 +157,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (err instanceof ApiError && err.status === 401) return null;
       if (err instanceof ApiError) throw new Error(err.message);
       throw new Error(
-        "Cannot reach the API server. Make sure the backend is running (npm run start).",
+        "Cannot reach the API server. Make sure the backend is running (bun run start).",
       );
     }
   }, []);

@@ -3,10 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "seed": "tsx src/scripts/seed.ts"
+    "dev": "bun --watch src/index.ts",
+    "build": "bunx tsc",
+    "start": "bun src/index.ts",
+    "seed": "bun src/scripts/seed.ts"
   },
   "dependencies": {
     "@types/multer": "^2.1.0",
@@ -27,7 +27,6 @@
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.16.5",
-    "tsx": "^4.20.5",
     "typescript": "^5.8.3"
   }
 }
